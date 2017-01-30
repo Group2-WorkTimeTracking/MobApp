@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('SignCtrl', function ($scope, $state, $ionicPopup, Employees) {
+.controller('SignCtrl', function ($scope, $stateParams, $state, $ionicPopup, Employees) {
 
     $scope.user = {
         fname: "",
@@ -8,7 +8,7 @@ angular.module('starter.controllers', [])
     };
 
     $scope.employees = Employees.all();
-
+        
     $scope.showAlert = function () {
         var alertPopup = $ionicPopup.alert({
             title: "Wrong input!",
@@ -55,6 +55,13 @@ angular.module('starter.controllers', [])
 })
 
 .controller('MainCtrl', function ($scope, $http, $stateParams, $state, $ionicPopup, Employees) {
+    //Refresh
+    $scope.doRefresh = function () {
+        $http.get("https://worktime-tracking.herokuapp.com/location").then(function (response) {
+            $scope.data = response.data;
+        });
+        $scope.$broadcast('scroll.refreshComplete');
+    }
 
     //$scope.uuid = device.uuid;
     $scope.uuid = "0";
@@ -63,9 +70,85 @@ angular.module('starter.controllers', [])
     $scope.userfname = $stateParams.userfname;
     $scope.userlname = $stateParams.userlname;
 
+    //Get data from Heroku server
     $http.get("https://worktime-tracking.herokuapp.com/location").then(function (response) {
         $scope.data = response.data;
     });
+
+    if (document.getElementById('placeName').value === $scope.placeName) {
+        $scope.status = "On work";
+    } else {
+        $scope.status = "Out of work";
+    }
+
+    //Set up todays date in good format
+    var d = new Date();
+    var weekday = new Array(7);
+    weekday[0] = "Sunday";
+    weekday[1] = "Monday";
+    weekday[2] = "Tuesday";
+    weekday[3] = "Wednesday";
+    weekday[4] = "Thursday";
+    weekday[5] = "Friday";
+    weekday[6] = "Saturday";
+    var month = new Array(12);
+    month[0] = 'Jan'; month[6] = 'Jul';
+    month[1] = 'Feb'; month[7] = 'Aug';
+    month[2] = 'Mar'; month[8] = 'Sep';
+    month[3] = 'Apr'; month[9] = 'Oct';
+    month[4] = 'May'; month[10] = 'Nov';
+    month[5] = 'Jun'; month[11] = 'Dec';
+    $scope.date = d.getDate() + " " + month[d.getMonth()] + ", " + weekday[d.getDay()] + ", " + d.getHours() + ":" + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+    // Timer count up:
+    $scope.upTime = function (countTo) {
+        now = new Date();
+        difference = (now - countTo);
+
+        hours = Math.floor((difference % (60 * 60 * 1000 * 24)) / (60 * 60 * 1000) * 1);
+        mins = Math.floor(((difference % (60 * 60 * 1000 * 24)) % (60 * 60 * 1000)) / (60 * 1000) * 1);
+        secs = Math.floor((((difference % (60 * 60 * 1000 * 24)) % (60 * 60 * 1000)) % (60 * 1000)) / 1000 * 1);
+        document.getElementById('hours').firstChild.nodeValue = hours;
+        document.getElementById('minutes').firstChild.nodeValue = mins;
+        document.getElementById('seconds').firstChild.nodeValue = secs;
+
+        clearTimeout(setT);
+        var setT = setTimeout(function () { upTime(countTo); }, 1000);        
+    }
+    $scope.upTime('jan,30,2017,00:00:00');
+
+
+    //Toggle setting
+    $scope.settings = {
+        enableFriends: true
+    };
+
+    //Note adding setting 
+    $scope.showPopup = function () {
+        $scope.data = {};
+
+        // An elaborate, custom popup
+        var myPopup = $ionicPopup.show({
+            template: '<input type="password" ng-model="data.wifi">',
+            title: 'Enter Wi-Fi Password',
+            subTitle: 'Please use normal things',
+            scope: $scope,
+            buttons: [
+              { text: 'Cancel' },
+              {
+                  text: '<b>Save</b>',
+                  type: 'button-positive',
+                  onTap: function (e) {
+                      if (!$scope.data.wifi) {
+                          //don't allow the user to close unless he enters wifi password
+                          e.preventDefault();
+                      } else {
+                          return $scope.data.wifi;
+                      }
+                  }
+              }
+            ]
+        });
+    }
 
     //$scope.data = {
     //    location: "",
@@ -76,15 +159,6 @@ angular.module('starter.controllers', [])
     //if ($scope.userfname == $scope.employees.fname) {
     //    $scope.userface = $scope.employees.face;
     //};
-
-
-    //$scope.doRefresh = function () {
-    //    $http.get("https://messaging-app-extra.herokuapp.com/messages").then(function (response) {
-    //        $scope.data = response.data;
-    //    });
-    //    $scope.$broadcast('scroll.refreshComplete');
-    //}
-
 
 
     //$scope.send = function () {
@@ -101,18 +175,6 @@ angular.module('starter.controllers', [])
     //        $scope.showAlert();
     //    }
     //    else {
-
-    //Getting date and time
-    //var d = new Date();
-    //var weekday = new Array(7);
-    //weekday[0] = "Sunday";
-    //weekday[1] = "Monday";
-    //weekday[2] = "Tuesday";
-    //weekday[3] = "Wednesday";
-    //weekday[4] = "Thursday";
-    //weekday[5] = "Friday";
-    //weekday[6] = "Saturday";
-    //$scope.time = weekday[d.getDay()] + ", " + d.getHours() + ":" + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
 
     //var dataWithPost = {
     //    username: $stateParams.username,
