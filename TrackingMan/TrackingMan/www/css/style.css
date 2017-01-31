@@ -77,6 +77,10 @@
     padding-top: 50px;
 }
 
+i.icon-big.ion-gear-a  { font-size: 26px }
+i.icon-big.ion-log-out { font-size: 23px }
+i.icon-big.icon-bug    { font-size: 22px }
+
 .userInfo {
     color: white;
     text-shadow: 1px 1px rgba(0,0,0,0.65);
