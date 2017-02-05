@@ -54,7 +54,7 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('MainCtrl', function ($scope, $http, $stateParams, $state, $ionicPopup, Employees) {
+.controller('MainCtrl', function ($scope, $http, $stateParams, $state, $ionicPopup, $ionicHistory, Employees) {
     //Refresh
     $scope.doRefresh = function () {
         $http.get("https://worktime-tracking.herokuapp.com/location").then(function (response) {
@@ -73,13 +73,7 @@ angular.module('starter.controllers', [])
     //Get data from Heroku server
     $http.get("https://worktime-tracking.herokuapp.com/location").then(function (response) {
         $scope.data = response.data;
-    });
-
-    if (document.getElementById('placeName').value === $scope.placeName) {
-        $scope.status = "On work";
-    } else {
-        $scope.status = "Out of work";
-    }
+    });    
 
     //Set up todays date in good format
     var d = new Date();
@@ -98,28 +92,130 @@ angular.module('starter.controllers', [])
     month[3] = 'Apr'; month[9] = 'Oct';
     month[4] = 'May'; month[10] = 'Nov';
     month[5] = 'Jun'; month[11] = 'Dec';
-    $scope.date = d.getDate() + " " + month[d.getMonth()] + ", " + weekday[d.getDay()] + ", " + d.getHours() + ":" + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
-    // Timer count up:
-    $scope.upTime = function (countTo) {
-        now = new Date();
-        difference = (now - countTo);
-
-        hours = Math.floor((difference % (60 * 60 * 1000 * 24)) / (60 * 60 * 1000) * 1);
-        mins = Math.floor(((difference % (60 * 60 * 1000 * 24)) % (60 * 60 * 1000)) / (60 * 1000) * 1);
-        secs = Math.floor((((difference % (60 * 60 * 1000 * 24)) % (60 * 60 * 1000)) % (60 * 1000)) / 1000 * 1);
-        document.getElementById('hours').firstChild.nodeValue = hours;
-        document.getElementById('minutes').firstChild.nodeValue = mins;
-        document.getElementById('seconds').firstChild.nodeValue = secs;
-
-        clearTimeout(setT);
-        var setT = setTimeout(function () { upTime(countTo); }, 1000);        
+    $scope.date = d.getDate() + " " + month[d.getMonth()] + ", " + weekday[d.getDay()] + ", "
+                  + d.getHours() + ":" + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+    
+    //////////////////////////////////////////////////////// Timer count up:
+    var timeCount;
+    if (document.getElementById('hour').innerHTML >= 00
+     && document.getElementById('minute').innerHTML >= 00
+     && document.getElementById('second').innerHTML >= 01) {
+        timeCount = false;
+    } else {
+        timeCount = true
     }
-    $scope.upTime('jan,30,2017,00:00:00');
+    
 
+    if (timeCount == true) {
+        $.fn.downCount = function (options, callback) {
+            var settings = $.extend({
+                date: null,
+                offset: null
+            }, options);
+
+            // Save container
+            var container = this;
+
+            /**
+             * Change client's local date to match offset timezone
+             * @return {Object} Fixed Date object.
+             */
+            var currentDate = function () {
+                // get client's current date
+                var date = new Date();
+
+                // turn date to utc
+                var utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+
+                // set new Date object
+                var new_date = new Date(utc + (3600000 * settings.offset))
+
+                return new_date;
+            };
+
+            /**
+             * Main downCount function that calculates everything
+             */
+            var original_date = currentDate();
+            var target_date = new Date('12/31/2020 12:00:00'); // Count up to this date
+
+            function onButtonClick() {
+                original_date = currentDate();
+            }
+
+            function countdown() {
+                var current_date = currentDate(); // get fixed current date
+
+                // difference of dates
+                var difference = current_date - original_date;
+
+                if (current_date >= target_date) {
+                    // stop timer
+                    clearInterval(interval);
+
+                    if (callback && typeof callback === 'function') callback();
+
+                    return;
+                }
+
+                // basic math variables
+                var _second = 1000,
+                    _minute = _second * 60,
+                    _hour = _minute * 60;
+                _day = _hour * 24;
+
+                // calculate dates
+                var hours = Math.floor((difference % _day) / _hour),
+                    minutes = Math.floor((difference % _hour) / _minute),
+                    seconds = Math.floor((difference % _minute) / _second);
+                // days = Math.floor(difference / _day),
+
+                // fix dates so that it will show two digets
+                //days = (String(days).length >= 2) ? days : '0' + days;
+                hours = (String(hours).length >= 2) ? hours : '0' + hours;
+                minutes = (String(minutes).length >= 2) ? minutes : '0' + minutes;
+                seconds = (String(seconds).length >= 2) ? seconds : '0' + seconds;
+
+                // based on the date change the refrence wording
+                var ref_hours = (hours === 1) ? 'hour' : 'hours',
+                    ref_minutes = (minutes === 1) ? 'minute' : 'minutes',
+                    ref_seconds = (seconds === 1) ? 'second' : 'seconds';
+                // ref_days = (days === 1) ? 'day' : 'days',
+
+                // set to DOM
+                // container.find('.days').text(days);
+                container.find('.hours').text(hours);
+                container.find('.minutes').text(minutes);
+                container.find('.seconds').text(seconds);
+
+                // container.find('.days_ref').text(ref_days);
+                container.find('.hours_ref').text(ref_hours);
+                container.find('.minutes_ref').text(ref_minutes);
+                container.find('.seconds_ref').text(ref_seconds);
+            };
+
+            // start
+            var interval = setInterval(countdown, 1000);
+        };
+
+        if (document.getElementById('placeName').value === $scope.placeName) {
+            $('.countdown').downCount();
+            $scope.status = "At work";
+        } else {
+            $scope.status = "Out of work";
+            $scope.atWork = false;
+        }
+    }
+    
+    
+    //$(document).ready(function () {
+    //    $('.countdown').downCount();
+    //});
+    ////////////////////////////////////////////////////////////////
 
     //Toggle setting
     $scope.settings = {
-        enableFriends: true
+        enableLocation: true
     };
 
     //Note adding setting 
@@ -149,6 +245,10 @@ angular.module('starter.controllers', [])
             ]
         });
     }
+
+    $scope.myGoBack = function () {
+        $ionicHistory.goBack();
+    };
 
     //$scope.data = {
     //    location: "",

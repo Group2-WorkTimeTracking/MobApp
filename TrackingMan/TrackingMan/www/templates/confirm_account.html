@@ -1,28 +1,35 @@
 ﻿<div class="bar bar-header bar-color">
-    <h1 class="title">Innitialization</h1>
-    <a href="" class="button button-clear" style="color:black" ng-click="showPopup()">Report a <i class="icon-big ion-bug"></i></a>
+    <h1 class="title">TrackingMan</h1>
 </div>
 
 <ion-content overflow-scroll="false" class="pane has-header1">
-    <h3 class="subtitle">Confirm your persona</h3>
+    <div class="vert-center">
+        <h3 class="subtitle">Confirm your persona</h3>
 
-    <div class="list padding">
-        <label class="item item-input">
-            <span class="input-label"> First name: </span>
-            <input type="text" ng-model="user.fname" id="fname">
-        </label>
-        <label class="item item-input">
-            <span class="input-label"> Last name: </span>
-            <input type="text" ng-model="user.lname" id="lname">
-        </label>
-        <label class="item item-input">
-            <span class="input-label"> Unique ID: </span>
-            <input type="text" ng-model="user.id" id="id">
-        </label>
-    </div>
-    <div class="padding">
-        <button class="button button-block button-color" ng-click="signin()">
-            Sign in
-        </button>
+        <div class="padding">
+            <label class="item item-input">
+                <span class="input-label"> First name: </span>
+                <input type="text" ng-model="user.fname" id="fname">
+            </label>
+            <label class="item item-input">
+                <span class="input-label"> Last name: </span>
+                <input type="text" ng-model="user.lname" id="lname">
+            </label>
+            <label class="item item-input">
+                <span class="input-label"> Unique ID: </span>
+                <input type="text" ng-model="user.id" id="id">
+            </label>
+        </div>
+        <div class="padding">
+            <button class="button button-block button-sign" ng-click="signin()">
+                Sign in
+            </button>            
+            <button class="button-report" ng-click="reportIssue()">
+                Privacy policy
+            </button>
+            <button class="button-report" ng-click="reportIssue()">
+                Report an issue!
+            </button>
+        </div>
     </div>
 </ion-content>

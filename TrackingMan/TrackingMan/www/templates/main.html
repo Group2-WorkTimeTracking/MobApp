@@ -1,39 +1,46 @@
 ﻿<div class="bar bar-header bar-color">
     <a href="#/signin" class="button button-clear" style="color:black"><i class="icon-big ion-log-out"></i></a>
     <h1 class="title">Personal page</h1>
-    <a href="" class="button button-clear" style="color:black"><i class="icon-big ion-gear-a"></i></a>
+    <a href="#/main/settings" class="button button-clear" style="color:black"><i class="icon-big ion-gear-a"></i></a>
 </div>
 <ion-content overflow-scroll="false" class="pane has-header1"> 
-    <ion-refresher pulling-text="Pull to refresh.." on-refresh="doRefresh()"></ion-refresher>            
-    <div class="userInfo padding">
-        <img src="img/mike.png" class="avatar" item-left>
-        <h2 class="subnametitle">{{userfname}} {{userlname}}</h2>
-        <p><b>Today is: </b>{{date}}</p>
-        <div id="countup">
-            <b>Tracked time: </b>
-            <p id="hours">00</p>
-            <p class="timeRefHours">hours</p>
-            <p id="minutes">00</p>
-            <p class="timeRefMinutes">min</p>
-            <p id="seconds">00</p>
-            <p class="timeRefSeconds">sec</p>
+    <div class="pane-main">
+        <ion-refresher pulling-text="Pull to refresh.." on-refresh="doRefresh()"></ion-refresher>
+        <div class="userInfo padding">
+            <img src="img/mike.png" class="avatar">
+            <!--<img src="img/mike.png" class="avatar">-->
+            <h3 class="subnametitle">{{userfname}} {{userlname}}</h3>
+            <hr />       
+            <center>
+                <b>Tracked time: </b>
+                <ul class="countdown">
+                    <li>
+                        <span class="hours" id="hour">00</span>
+                        <p class="hours_ref">hours</p>
+                    </li>
+                    <li class="seperator">:</li>
+                    <li>
+                        <span class="minutes" id="minute">00</span>
+                        <p class="minutes_ref">minutes</p>
+                    </li>
+                    <li class="seperator">:</li>
+                    <li>
+                        <span class="seconds" id="second">00</span>
+                        <p class="seconds_ref">seconds</p>
+                    </li>
+                </ul>
+            </center>  
+            <p><b>Today is: </b>{{date}}</p>     
+            <p id="placeName"><b>Work place: </b>{{data.placeName}}</p>
+            <div>
+                <p><b>Status: </b>{{status}}</p>
+                <p>{{data.coordinate}}</p>
+                <p>{{data.size}}</p>
+            </div>
+            <button class="button button-positive" ng-click="showPopup()">
+                Make a note
+            </button>
         </div>
-        <p id="placeName"><b>Work place: </b>{{data.placeName}}</p>
-        <div>
-            <p><b>Status: </b>{{status}}</p>
-            <p>{{data.coordinate}}</p>
-            <p>{{data.size}}</p>
-        </div>
-        <button class="button button-positive" ng-click="showPopup()">
-            Make a note
-        </button>
     </div>
-
-    
 </ion-content>
-<div class="bottom">
-    <ion-toggle ng-model="settings.enableFriends">
-        Enable geolocation
-    </ion-toggle>
-</div>
 

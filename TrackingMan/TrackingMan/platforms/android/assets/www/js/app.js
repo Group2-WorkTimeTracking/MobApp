@@ -40,6 +40,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             userfname: null,
             userlname: null
         }
+    })
+
+    .state('settings', {
+        url: '/main/settings',
+        templateUrl: 'templates/settings.html',
+        controller: 'MainCtrl'
     });
 
     $urlRouterProvider.otherwise('/signin');
