@@ -24,10 +24,10 @@
     border-bottom: none !important;
 }
 .bar-color {
-    background-color: rgba(255, 255, 255, 0.8);
-    -webkit-box-shadow: 0px 10px 26px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 10px 26px 0px rgba(0,0,0,0.75);
-    box-shadow: 0px 10px 40px 5px rgba(0,0,0,0.75);
+    background-color: rgba(255, 255, 255, 1);
+    -webkit-box-shadow: 0px 10px 26px 0px rgba(0,0,0,0.6);
+    -moz-box-shadow: 0px 10px 26px 0px rgba(0,0,0,0.6);
+    box-shadow: 0px 10px 40px 5px rgba(0,0,0,0.6);
 }
 
 .pane {
@@ -100,7 +100,10 @@
 }
 
 .pane-main {
-    background: rgba(0,0,0,0.4);
+    position: relative;
+    display: block;
+    background: rgba(0,0,0,0.3);
+    height: 100% !important
 }
 
 i.icon-big.ion-gear-a  { font-size: 26px }

@@ -105,7 +105,6 @@ angular.module('starter.controllers', [])
         timeCount = true
     }
     
-
     if (timeCount == true) {
         $.fn.downCount = function (options, callback) {
             var settings = $.extend({
@@ -220,25 +219,27 @@ angular.module('starter.controllers', [])
 
     //Note adding setting 
     $scope.showPopup = function () {
-        $scope.data = {};
+        $scope.noteData = {};
 
         // An elaborate, custom popup
         var myPopup = $ionicPopup.show({
-            template: '<input type="password" ng-model="data.wifi">',
-            title: 'Enter Wi-Fi Password',
-            subTitle: 'Please use normal things',
+            template: '<textarea rows="6" style="width:100%" ng-model="noteData.note" />',
+            title: 'Add a note',
+            subTitle: 'Describe your case:',
             scope: $scope,
             buttons: [
-                { text: 'Cancel' },
+                { text: 'Cancel',
+                  type: 'button-assertive'
+                },
                 {
                     text: '<b>Save</b>',
                     type: 'button-positive',
                     onTap: function (e) {
-                        if (!$scope.data.wifi) {
+                        if (!$scope.noteData.note) {
                             //don't allow the user to close unless he enters wifi password
                             e.preventDefault();
                         } else {
-                            return $scope.data.wifi;
+                            return $scope.noteData.note;
                         }
                     }
                 }
