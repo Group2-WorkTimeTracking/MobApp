@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('SignCtrl', function ($scope, $stateParams, $state, $ionicPopup, Employees) {
+.controller('SignCtrl', function ($scope, $stateParams, $state, $ionicPopup, $ionicHistory, Employees) {
 
     $scope.user = {
         fname: "",
@@ -52,6 +52,42 @@ angular.module('starter.controllers', [])
             });
         }
     }
+
+
+    $scope.seePrivacy = function () {
+        $state.go('privacy_policy');
+    };
+
+    $scope.reportIssue = function () {
+        $scope.issueData = {};
+        var myPopup = $ionicPopup.show({
+            template: '<textarea rows="6" style="width:100%" ng-model="noteData.note" />',
+            title: 'Issue report',
+            subTitle: 'Describe your issue:',
+            scope: $scope,
+            buttons: [
+                {
+                    text: 'Cancel',
+                    type: 'button-assertive'
+                },
+                {
+                    text: '<b>Report</b>',
+                    type: 'button-positive',
+                    onTap: function (e) {
+                        if (!$scope.issueData.note) {
+                            e.preventDefault();
+                        } else {
+                            return $scope.issueData.note;
+                        }
+                    }
+                }
+            ]
+        });
+    }
+
+    $scope.myGoBack = function () {
+        $ionicHistory.goBack();
+    };
 })
 
 .controller('MainCtrl', function ($scope, $http, $stateParams, $state, $ionicPopup, $ionicHistory, Employees) {
@@ -63,6 +99,11 @@ angular.module('starter.controllers', [])
         $scope.$broadcast('scroll.refreshComplete');
     }
 
+    //Get data from Heroku server
+    $http.get("https://worktime-tracking.herokuapp.com/location").then(function (response) {
+        $scope.data = response.data;
+    });
+
     //$scope.uuid = device.uuid;
     $scope.uuid = "0";
 
@@ -70,10 +111,14 @@ angular.module('starter.controllers', [])
     $scope.userfname = $stateParams.userfname;
     $scope.userlname = $stateParams.userlname;
 
-    //Get data from Heroku server
-    $http.get("https://worktime-tracking.herokuapp.com/location").then(function (response) {
-        $scope.data = response.data;
-    });    
+    //Avatar 
+    if ($scope.userfname == 'Nargiz' && $scope.userlname == 'Safarova') {
+        $scope.avatar = "img/zaya.jpg";
+    } else if ($scope.userfname == 'Roman' && $scope.userlname == 'Kucherenko') {
+        $scope.avatar = "img/roma.jpg";
+    } else {
+        $scope.avatar = "img/mike.png";
+    }  
 
     //Set up todays date in good format
     var d = new Date();
@@ -205,38 +250,23 @@ angular.module('starter.controllers', [])
             $scope.atWork = false;
         }
     }
-    
-    
-    //$(document).ready(function () {
-    //    $('.countdown').downCount();
-    //});
-    ////////////////////////////////////////////////////////////////
-
-    //Toggle setting
-    $scope.settings = {
-        enableLocation: true
-    };
+    ////////////////////////////////////////////////////////////////    
 
     //Note adding setting 
-    $scope.showPopup = function () {
+    $scope.makeNote = function () {
         $scope.noteData = {};
-
-        // An elaborate, custom popup
         var myPopup = $ionicPopup.show({
             template: '<textarea rows="6" style="width:100%" ng-model="noteData.note" />',
             title: 'Add a note',
             subTitle: 'Describe your case:',
             scope: $scope,
             buttons: [
-                { text: 'Cancel',
-                  type: 'button-assertive'
-                },
+                { text: 'Cancel' },
                 {
-                    text: '<b>Save</b>',
+                    text: '<b>Send</b>',
                     type: 'button-positive',
                     onTap: function (e) {
                         if (!$scope.noteData.note) {
-                            //don't allow the user to close unless he enters wifi password
                             e.preventDefault();
                         } else {
                             return $scope.noteData.note;
@@ -247,9 +277,78 @@ angular.module('starter.controllers', [])
         });
     }
 
+    $scope.viewTimeLogs = function () {
+        $state.go('time_logs');
+    }
+
     $scope.myGoBack = function () {
         $ionicHistory.goBack();
     };
+
+})
+
+
+.controller('SetCtrl', function ($scope, $http, $stateParams, $state, $ionicPopup, $ionicHistory) {
+    //Toggle setting
+    $scope.settings = {
+        enableLocation: true
+    };
+
+    $scope.myGoBack = function () {
+        $ionicHistory.goBack();
+    };
+
+})
+
+.controller('LogCtrl', function ($scope, $http, $stateParams, $state, $ionicPopup, $ionicHistory) {
+    $scope.myGoBack = function () {
+        $ionicHistory.goBack();
+    };
+
+    $scope.data = {
+        showDelete: false
+    };
+
+    $scope.report = function (item) {
+        alert('Report issue about ' + item.day);
+    };
+    $scope.addNote = function (item) {
+        alert('Add note for ' + item.day);
+    };
+
+    $scope.moveItem = function (item, fromIndex, toString) {
+        $scope.items.splice(fromString, 1);
+        $scope.items.splice(toString, 0, item);
+    };
+
+    $scope.onItemDelete = function (item) {
+        $scope.items.splice($scope.items.indexOf(item), 1);
+    };
+
+    $scope.items = [
+      {
+          id: 0,
+          day: '10.02.2017',
+          time: '6h 34m'
+      },
+      {
+          id: 1,
+          day: '09.02.2017',
+          time: '5h 56m'
+      },
+      {
+          id: 2,
+          day: '08.02.2017',
+          time: '6h 11m'
+      },
+      {
+          id: 3,
+          day: '07.02.2017',
+          time: '6h 28m'
+      }
+    ];
+
+})
 
     //$scope.data = {
     //    location: "",
@@ -300,7 +399,6 @@ angular.module('starter.controllers', [])
 
     //}
     //} 
-})
 
 .controller('DashCtrl', function ($scope) { })
 

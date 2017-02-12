@@ -45,7 +45,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     .state('settings', {
         url: '/main/settings',
         templateUrl: 'templates/settings.html',
-        controller: 'MainCtrl'
+        controller: 'SetCtrl'
+    })
+
+    .state('time_logs', {
+        url: '/main/time_logs',
+        templateUrl: 'templates/time-logs.html',
+        controller: 'LogCtrl'
+    })
+
+    .state('privacy_policy', {
+        url: '/privacy_policy',
+        templateUrl: 'templates/privacy-policy.html',
+        controller: 'SignCtrl'
     });
 
     $urlRouterProvider.otherwise('/signin');

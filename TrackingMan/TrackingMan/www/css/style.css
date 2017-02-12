@@ -1,8 +1,10 @@
 ﻿/* Empty. Add your own CSS if you like */
 
 /* Common elements */
-.title {
-    font-family: 'Rambla', sans-serif;
+.bar .title {
+    font-family: 'Cinzel', serif;
+    font-size: 25px;
+    font-weight: 600;
 }
 
 .subtitle, .subnametitle {
@@ -13,25 +15,30 @@
 }
 
 .subtitle {    
-    padding-top:65px; 
-    padding-bottom: 20px;
+    padding-top: 20%; 
+    padding-bottom: 10px;
 }
 
 .bar, .bar-header {
+    background: url('../img/bg-bar.jpg') no-repeat bottom center fixed !important;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    width: 100%;
     border: 0px !important;
     border-bottom-color: !important;
-    background-image: none !important;
     border-bottom: none !important;
 }
-.bar-color {
+.bar-color {    
+    /*background: -webkit-linear-gradient(top, rgba(245,197,125,1) 0%, rgba(214,131,7,1) 100%);
     background-color: rgba(255, 255, 255, 1);
     -webkit-box-shadow: 0px 10px 26px 0px rgba(0,0,0,0.6);
     -moz-box-shadow: 0px 10px 26px 0px rgba(0,0,0,0.6);
-    box-shadow: 0px 10px 40px 5px rgba(0,0,0,0.6);
+    box-shadow: 0px 10px 40px 5px rgba(0,0,0,0.6);*/
 }
 
 .pane {
-    background: url('../img/bg.jpg') no-repeat center center fixed; 
+    background: url('../img/bg.jpg') no-repeat top center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
@@ -67,20 +74,20 @@
     -moz-box-shadow: 0px 10px 26px -10px rgba(0,0,0,0.75);
     box-shadow: 0px 10px 35px -6px rgba(0,0,0,0.75);
 }
-.button-sign:hover {
+/*.button-sign:hover {
     background-color: rgba(255, 255, 103, 0.8);
     -webkit-box-shadow: 0px 10px 35px -6px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 10px 35px -6px rgba(0,0,0,0.75);
     box-shadow: 0px 10px 35px -6px rgba(0,0,0,0.75);
-}
+}*/
 .button-sign:active {    
-    background-color: rgba(255, 255, 103, 0.8);
+    background-color: rgba(226, 226, 70, 0.8);
     -webkit-box-shadow: 0px 10px 35px -6px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 10px 35px -6px rgba(0,0,0,0.75);
     box-shadow: 0px 10px 35px -6px rgba(0,0,0,0.75);
 }
 
-.button-report {
+.button-report, .button-seePrivacy {
     font-size: 15px;
     color: white;
     text-decoration: none;
@@ -89,6 +96,11 @@
     text-shadow: 2px -1px rgba(0,0,0,0.8);
 }
 .button-report:active {
+    color: #f7b81b;
+    text-decoration: underline;
+}
+.button-seePrivacy:active {
+    color: #f7b81b;
     text-decoration: underline;
 }
 
@@ -102,8 +114,11 @@
 .pane-main {
     position: relative;
     display: block;
-    background: rgba(0,0,0,0.3);
-    height: 100% !important
+    background: rgba(0,0,0,0.35);
+    height: 100% !important;
+    padding: 7px;
+    border-radius: 5px;
+    margin-bottom: 8px;
 }
 
 i.icon-big.ion-gear-a  { font-size: 26px }
@@ -146,8 +161,8 @@ ul.countdown li {
    display: inline-block;
 }
 ul.countdown li span {
-   font-size: 17px;
-   font-weight: 300;
+   font-size: 18px;
+   font-weight: 400;
    line-height: 10px;
 }
 ul.countdown li.seperator {
@@ -156,9 +171,25 @@ ul.countdown li.seperator {
    vertical-align: top;
 }
    ul.countdown li p {
-   color: #a7abb1;
+   color: #cdd2d8;
    font-size: 15px;
 }
+
+.item.item-input-inset { 
+    background: none !important;
+    border: 0px !important;
+    padding: 0px !important
+}
+.button_note {
+    background-color: rgba(255, 255, 102, 0.7); 
+    border-radius: 5px 0 0 5px;
+}
+.button_note:active { background-color: rgba(226, 226, 70, 0.8) }
+.button_timelogs {
+    background-color: rgba(166, 247, 61, 0.7);
+    border-radius: 0 5px 5px 0;
+}
+.button_timelogs:active { background-color: rgba(130, 211, 25, 0.7) }
 
 .ion-toggle {
     background: none !important;

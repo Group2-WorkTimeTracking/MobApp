@@ -1,0 +1,28 @@
+﻿<div class="bar bar-header bar-color">
+    <a ng-click="myGoBack()" class="button button-clear" style="color:black"><i class="icon-big ion-chevron-left"></i></a>
+    <h1 class="title">Time logs</h1>
+    <button class="button button-icon icon ion-ios-minus-outline"
+            ng-click="data.showDelete = !data.showDelete; data.showReorder = false"></button>
+</div>
+<ion-content overflow-scroll="false" class="pane has-header1">
+    <ion-list show-delete="data.showDelete" show-reorder="data.showReorder">
+        <ion-item ng-repeat="item in items"
+                  item="item"
+                  class="item-remove-animate">
+            Date: {{ item.day }} <br />
+            Time worked: {{ item.time }}
+            <ion-delete-button class="ion-minus-circled"
+                               ng-click="onItemDelete(item)">
+            </ion-delete-button>
+            <ion-option-button class="button-assertive"
+                               ng-click="report(item)">
+                Report issue
+            </ion-option-button>
+            <ion-option-button class="button-calm"
+                               ng-click="addNote(item)">
+                Add note
+            </ion-option-button>
+            <ion-reorder-button class="ion-navicon" on-reorder="moveItem(item, $fromIndex, $toIndex)"></ion-reorder-button>
+        </ion-item>
+    </ion-list>
+</ion-content>
