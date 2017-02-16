@@ -205,7 +205,14 @@ ul.countdown li.seperator {
     color: rgb(10,10,10)
 }
 .time_logs_item .item-content.activated {
-  background-color: rgba(255,255,255,0.8) !important;
+    background-color: rgba(255,255,255,0.8) !important;
+}
+.ion-option-button.button.button-assertive {
+    opacity: 0.8;
+}
+
+.ion-option-button.button.button-calm {
+    opacity: 0.8;
 }
 
 /* Extra */

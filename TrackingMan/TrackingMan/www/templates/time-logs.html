@@ -5,15 +5,12 @@
             ng-click="data.showDelete = !data.showDelete; data.showReorder = false"></button>
 </div>
 <ion-content overflow-scroll="false" class="pane has-header1">
-    <ion-list class="time_logs_list" show-delete="data.showDelete" show-reorder="data.showReorder">
+    <ion-list class="time_logs_list">
         <ion-item class="time_logs_item" ng-repeat="item in items"
                   item="item"
                   class="item-remove-animate">
             Date: {{ item.day }} <br />
             Time worked: {{ item.time }}
-            <ion-delete-button class="ion-minus-circled"
-                               ng-click="onItemDelete(item)">
-            </ion-delete-button>
             <ion-option-button class="button-assertive"
                                ng-click="report(item)">
                 Report issue

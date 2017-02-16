@@ -269,7 +269,7 @@ angular.module('starter.controllers', [])
             $scope.possition = _lat + ' ' + _long;
 
         }, function (err) {
-            console.log(err);
+            $scope.possition = err;
         });
     }
 
