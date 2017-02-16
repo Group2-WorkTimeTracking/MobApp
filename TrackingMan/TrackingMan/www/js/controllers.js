@@ -92,7 +92,7 @@ angular.module('starter.controllers', [])
     
 })
 
-.controller('MainCtrl', function ($scope, $http, $stateParams, $state, $ionicPopup, $ionicHistory, $cordovaGeolocation, Employees) {
+.controller('MainCtrl', function ($scope, $http, $stateParams, $state, $ionicPopup, $ionicHistory, $cordovaGeolocation, $interval, Employees) {
     //Refresh
     $scope.doRefresh = function () {
         $http.get("https://worktime-tracking.herokuapp.com/location").then(function (response) {
@@ -257,19 +257,23 @@ angular.module('starter.controllers', [])
     ///////// Geolocation 
     var posOptions = {
         enableHighAccuracy: true,
-        timeout: 2000,
+        timeout: 10000,
         maximumAge: 0
     };
 
-    $cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
-        var _lat = position.coords.latitude;
-        var _long = position.coords.longitude;
+    var getGeoLocation = function() {
+        $cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
+            var _lat = position.coords.latitude;
+            var _long = position.coords.longitude;
 
-        $scope.possition = _lat + ' ' + _long;
+            $scope.possition = _lat + ' ' + _long;
 
-    }, function (err) {
-        console.log(err);
-    });
+        }, function (err) {
+            console.log(err);
+        });
+    }
+
+    $interval(getGeoLocation, 6000);
     ////////////////////////////////////////////
 
     //Note adding setting 

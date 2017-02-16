@@ -5,8 +5,8 @@
             ng-click="data.showDelete = !data.showDelete; data.showReorder = false"></button>
 </div>
 <ion-content overflow-scroll="false" class="pane has-header1">
-    <ion-list show-delete="data.showDelete" show-reorder="data.showReorder">
-        <ion-item ng-repeat="item in items"
+    <ion-list class="time_logs_list" show-delete="data.showDelete" show-reorder="data.showReorder">
+        <ion-item class="time_logs_item" ng-repeat="item in items"
                   item="item"
                   class="item-remove-animate">
             Date: {{ item.day }} <br />
