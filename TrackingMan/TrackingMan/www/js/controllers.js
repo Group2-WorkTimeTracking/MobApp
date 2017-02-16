@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('SignCtrl', function ($scope, $stateParams, $state, $ionicPopup, $ionicHistory, Employees) {
+.controller('SignCtrl', function ($scope, $stateParams, $state, $ionicPopup, $ionicHistory, $cordovaGeolocation, Employees) {
 
     $scope.user = {
         fname: "",
@@ -88,9 +88,11 @@ angular.module('starter.controllers', [])
     $scope.myGoBack = function () {
         $ionicHistory.goBack();
     };
+
+    
 })
 
-.controller('MainCtrl', function ($scope, $http, $stateParams, $state, $ionicPopup, $ionicHistory, Employees) {
+.controller('MainCtrl', function ($scope, $http, $stateParams, $state, $ionicPopup, $ionicHistory, $cordovaGeolocation, Employees) {
     //Refresh
     $scope.doRefresh = function () {
         $http.get("https://worktime-tracking.herokuapp.com/location").then(function (response) {
@@ -250,27 +252,72 @@ angular.module('starter.controllers', [])
             $scope.atWork = false;
         }
     }
-    ////////////////////////////////////////////////////////////////    
+    ////////////////////////////////////////////////////////////////   
+
+    ///////// Geolocation 
+    var posOptions = {
+        enableHighAccuracy: true,
+        timeout: 2000,
+        maximumAge: 0
+    };
+
+    $cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
+        var _lat = position.coords.latitude;
+        var _long = position.coords.longitude;
+
+        $scope.possition = _lat + ' ' + _long;
+
+    }, function (err) {
+        console.log(err);
+    });
+    ////////////////////////////////////////////
 
     //Note adding setting 
-    $scope.makeNote = function () {
-        $scope.noteData = {};
+    $scope.wrongStatus = function () {
+        var alertPopup = $ionicPopup.alert({
+            title: "Something goes wrong",
+            template: "Try to make a note again, please!",
+            okText: "Make note",
+            okType: "button-positive",
+            onTap: $scope.makeNote()
+        });
+    }
+    $scope.goodStatus = function () {
+        var alertPopup = $ionicPopup.alert({
+            title: "Success",
+            template: "The form is submitted successfully!",
+            okText: "OK",
+            okType: "button-positive"
+        });
+    }
+
+    $scope.makeNote = function () {             
         var myPopup = $ionicPopup.show({
-            template: '<textarea rows="6" style="width:100%" ng-model="noteData.note" />',
+            template: '<textarea rows="5" type="text" id="text">',
             title: 'Add a note',
             subTitle: 'Describe your case:',
-            scope: $scope,
             buttons: [
                 { text: 'Cancel' },
                 {
                     text: '<b>Send</b>',
                     type: 'button-positive',
-                    onTap: function (e) {
-                        if (!$scope.noteData.note) {
-                            e.preventDefault();
-                        } else {
-                            return $scope.noteData.note;
+                    onTap: function () {
+                        $scope.noteMessage = { note: document.getElementById('text').value }
+                        var noteData = {
+                            message: $scope.noteMessage.note,
+                            dayOfEffectiveness: "2017-01-22",
+                            userId: 42
                         }
+                        $http.post("https://worktime-tracking.herokuapp.com/work/note", noteData).then(function (response) {
+                            $scope.noteData = response.data;
+                            $scope.noteStatus = response.status;
+                            if ($scope.noteStatus == "200") {
+                                $scope.goodStatus()
+                            }
+                            else {
+                                $scope.wrongStatus()
+                            }
+                        })                        
                     }
                 }
             ]
@@ -283,8 +330,7 @@ angular.module('starter.controllers', [])
 
     $scope.myGoBack = function () {
         $ionicHistory.goBack();
-    };
-
+    }
 })
 
 
