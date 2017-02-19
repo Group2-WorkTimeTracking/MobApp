@@ -95,14 +95,14 @@ angular.module('starter.controllers', [])
 .controller('MainCtrl', function ($scope, $http, $stateParams, $state, $ionicPopup, $ionicHistory, $cordovaGeolocation, $interval, Employees) {
     //Refresh
     $scope.doRefresh = function () {
-        $http.get("https://worktime-tracking.herokuapp.com/location").then(function (response) {
+        $http.get("https://worktime-tracking.herokuapp.com/location/1").then(function (response) {
             $scope.data = response.data;
         });
         $scope.$broadcast('scroll.refreshComplete');
     }
 
     //Get data from Heroku server
-    $http.get("https://worktime-tracking.herokuapp.com/location").then(function (response) {
+    $http.get("https://worktime-tracking.herokuapp.com/location/1").then(function (response) {
         $scope.data = response.data;
     });
 
@@ -142,54 +142,68 @@ angular.module('starter.controllers', [])
     $scope.date = d.getDate() + " " + month[d.getMonth()] + ", " + weekday[d.getDay()] + ", "
                   + d.getHours() + ":" + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
     
+
     //////////////////////////////////////////////////////// Timer count up:
     var timeCount;
-    if (document.getElementById('hour').innerHTML >= 00
-     && document.getElementById('minute').innerHTML >= 00
-     && document.getElementById('second').innerHTML >= 01) {
-        timeCount = false;
-    } else {
-        timeCount = true
+    $scope.start = function () {
+        if (document.getElementById('placeName').value === $scope.placeName) {
+            $scope.status = "At work";
+            $('.countdown').upCount();
+            timeCount = true;
+        }
+        var startDate = new Date();
+        $http.post("https://worktime-tracking.herokuapp.com//work/start", startDate).then(function (response) {
+            $scope.startDate = response.data;
+        });
     }
-    
-    if (timeCount == true) {
-        $.fn.downCount = function (options, callback) {
-            var settings = $.extend({
-                date: null,
-                offset: null
-            }, options);
 
-            // Save container
-            var container = this;
+    $scope.finish = function () {
+        $scope.status = "Out of work";
+        timeCount = false;
+        var finishDate = new Date();
+        $http.post("https://worktime-tracking.herokuapp.com//work/finish", finishDate).then(function (response) {
+            $scope.finishDate = response.data;
+        });
+    }
 
-            /**
-             * Change client's local date to match offset timezone
-             * @return {Object} Fixed Date object.
-             */
-            var currentDate = function () {
-                // get client's current date
-                var date = new Date();
+    $.fn.upCount = function (options, callback) {
+        var settings = $.extend({
+            date: null,
+            offset: null
+        }, options);
 
-                // turn date to utc
-                var utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+        // Save container
+        var container = this;
 
-                // set new Date object
-                var new_date = new Date(utc + (3600000 * settings.offset))
+        /**
+            * Change client's local date to match offset timezone
+            * @return {Object} Fixed Date object.
+            */
+        var currentDate = function () {
+            // get client's current date
+            var date = new Date();
 
-                return new_date;
-            };
+            // turn date to utc
+            var utc = date.getTime() + (date.getTimezoneOffset() * 60000);
 
-            /**
-             * Main downCount function that calculates everything
-             */
-            var original_date = currentDate();
-            var target_date = new Date('12/31/2020 12:00:00'); // Count up to this date
+            // set new Date object
+            var new_date = new Date(utc + (3600000 * settings.offset))
 
-            function onButtonClick() {
-                original_date = currentDate();
-            }
+            return new_date;
+        };
 
-            function countdown() {
+        /**
+            * Main downCount function that calculates everything
+            */
+        var original_date = currentDate();
+        var target_date = new Date('12/31/2020 12:00:00'); // Count up to this date
+
+        function onButtonClick() {
+            original_date = currentDate();
+        }
+                 
+        function countup() {
+            if (timeCount == true) {
                 var current_date = currentDate(); // get fixed current date
 
                 // difference of dates
@@ -238,20 +252,22 @@ angular.module('starter.controllers', [])
                 container.find('.hours_ref').text(ref_hours);
                 container.find('.minutes_ref').text(ref_minutes);
                 container.find('.seconds_ref').text(ref_seconds);
-            };
-
-            // start
-            var interval = setInterval(countdown, 1000);
+            }
         };
+            
+        // start
+        var interval = setInterval(countup, 1000);
+    };
 
-        if (document.getElementById('placeName').value === $scope.placeName) {
-            $('.countdown').downCount();
-            $scope.status = "At work";
-        } else {
-            $scope.status = "Out of work";
-            $scope.atWork = false;
-        }
-    }
+    //if (document.getelementbyid('hour').innerhtml >= 00
+    //     && document.getelementbyid('minute').innerhtml >= 00
+    //     && document.getelementbyid('second').innerhtml >= 01
+    //     && timeCount == false) {
+    //    document.getelementbyid('hour').innerhtml = 00;
+    //    document.getelementbyid('minute').innerhtml = 00;
+    //    document.getelementbyid('second').innerhtml = 00;
+    //}
+
     ////////////////////////////////////////////////////////////////   
 
     ///////// Geolocation 
@@ -355,49 +371,38 @@ angular.module('starter.controllers', [])
         $ionicHistory.goBack();
     };
 
+    //Refresh
+    $scope.doRefresh = function () {
+        $http.get("https://worktime-tracking.herokuapp.com/account/logs/2017-02").then(function (response) {
+            $scope.days = response.data;
+        });
+        $scope.$broadcast('scroll.refreshComplete');
+    }
+
+    //Get data from Heroku server
+    $http.get("https://worktime-tracking.herokuapp.com/account/logs/2017-02").then(function (response) {
+        $scope.days = response.data;
+    });
+
     $scope.data = {
         showDelete: false
     };
 
-    $scope.report = function (item) {
-        alert('Report issue about ' + item.day);
+    $scope.report = function (day) {
+        alert('Report issue about ' + day.day);
     };
-    $scope.addNote = function (item) {
-        alert('Add note for ' + item.day);
-    };
-
-    $scope.moveItem = function (item, fromIndex, toString) {
-        $scope.items.splice(fromString, 1);
-        $scope.items.splice(toString, 0, item);
+    $scope.addNote = function (day) {
+        alert('Add note for ' + day.day);
     };
 
-    $scope.onItemDelete = function (item) {
-        $scope.items.splice($scope.items.indexOf(item), 1);
+    $scope.moveItem = function (day, fromIndex, toString) {
+        $scope.days.splice(fromString, 1);
+        $scope.days.splice(toString, 0, day);
     };
 
-    $scope.items = [
-      {
-          id: 0,
-          day: '10.02.2017',
-          time: '6h 34m'
-      },
-      {
-          id: 1,
-          day: '09.02.2017',
-          time: '5h 56m'
-      },
-      {
-          id: 2,
-          day: '08.02.2017',
-          time: '6h 11m'
-      },
-      {
-          id: 3,
-          day: '07.02.2017',
-          time: '6h 28m'
-      }
-    ];
-
+    $scope.onItemDelete = function (day) {
+        $scope.days.splice($scope.days.indexOf(day), 1);
+    };
 })
 
     //$scope.data = {

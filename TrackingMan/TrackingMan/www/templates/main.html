@@ -9,7 +9,7 @@
         <img src="{{avatar}}" class="avatar">
         <!--<img src="img/mike.png" class="avatar">-->
         <h3 class="subnametitle">{{userfname}} {{userlname}}</h3>
-        <hr />       
+        <hr />      
         <center>
             <b>Tracked time: </b>
             <ul class="countdown">
@@ -33,8 +33,6 @@
             <p><b>Today is: </b>{{date}}</p>
             <p id="placeName"><b>Work place: </b>{{data.placeName}}</p>
             <p><b>Status: </b>{{status}}</p>
-            <p>{{data.coordinate}}</p>
-            <p>{{data.size}}</p>  
             <p>{{possition}}</p>     
         </div>
         <div class="item item-input-inset">
@@ -45,6 +43,15 @@
                 View time logs
             </button>
         </div>
+        <div class="item item-input-inset">
+            <button class="button button-full button_note" ng-click="start()">
+                Start
+            </button>
+            <button class="button button-full button_timelogs" ng-click="finish()">
+                Finish
+            </button>
+        </div>
+        {{startDate}}
     </div>
 </ion-content>
 
