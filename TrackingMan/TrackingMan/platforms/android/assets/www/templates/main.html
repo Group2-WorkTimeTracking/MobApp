@@ -33,7 +33,10 @@
             <p><b>Today is: </b>{{date}}</p>
             <p id="placeName"><b>Work place: </b>{{data.placeName}}</p>
             <p><b>Status: </b>{{status}}</p>
-            <p>{{possition}}</p>     
+            <p>{{possition}}</p>   
+            {{startDate}}
+            {{finishDate}}
+            {{time}}  {{time2}}
         </div>
         <div class="item item-input-inset">
             <button class="button button-full button_note" ng-click="makeNote()">
@@ -51,7 +54,6 @@
                 Finish
             </button>
         </div>
-        {{startDate}}
     </div>
 </ion-content>
 

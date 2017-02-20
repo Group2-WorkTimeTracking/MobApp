@@ -151,8 +151,13 @@ angular.module('starter.controllers', [])
             $('.countdown').upCount();
             timeCount = true;
         }
-        var startDate = new Date();
-        $http.post("https://worktime-tracking.herokuapp.com//work/start", startDate).then(function (response) {
+        var time = new Date();
+        time = time.toISOString().substring(0, 19);
+        var startDate = {
+            timestamp: time,
+            userId: 1
+        }
+        $http.post("https://worktime-tracking.herokuapp.com/work/start", startDate).then(function (response) {
             $scope.startDate = response.data;
         });
     }
@@ -160,8 +165,13 @@ angular.module('starter.controllers', [])
     $scope.finish = function () {
         $scope.status = "Out of work";
         timeCount = false;
-        var finishDate = new Date();
-        $http.post("https://worktime-tracking.herokuapp.com//work/finish", finishDate).then(function (response) {
+        var time = new Date();
+        time = time.toISOString().substring(0, 19);
+        var finishDate = {
+            timestamp: time,
+            userId: 1
+        }
+        $http.post("https://worktime-tracking.herokuapp.com/work/finish", finishDate).then(function (response) {
             $scope.finishDate = response.data;
         });
     }
