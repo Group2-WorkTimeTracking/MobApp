@@ -321,7 +321,9 @@ angular.module('starter.controllers', [])
         });
     }
 
-    $scope.makeNote = function () {             
+    $scope.makeNote = function () {        
+        var date = new Date();
+        var currentDate = date.toISOString().substring(0, 10);
         var myPopup = $ionicPopup.show({
             template: '<textarea rows="5" type="text" id="text">',
             title: 'Add a note',
@@ -335,8 +337,8 @@ angular.module('starter.controllers', [])
                         $scope.noteMessage = { note: document.getElementById('text').value }
                         var noteData = {
                             message: $scope.noteMessage.note,
-                            dayOfEffectiveness: "2017-01-22",
-                            userId: 42
+                            dayOfEffectiveness: currentDate,
+                            userId: 1
                         }
                         $http.post("https://worktime-tracking.herokuapp.com/work/note", noteData).then(function (response) {
                             $scope.noteData = response.data;
@@ -383,15 +385,17 @@ angular.module('starter.controllers', [])
 
     //Refresh
     $scope.doRefresh = function () {
-        $http.get("https://worktime-tracking.herokuapp.com/account/logs/2017-02").then(function (response) {
+        $http.get("https://worktime-tracking.herokuapp.com/account/logs").then(function (response) {
             $scope.days = response.data;
+            $scope.days.dailyWork.reverse();
         });
         $scope.$broadcast('scroll.refreshComplete');
     }
 
     //Get data from Heroku server
-    $http.get("https://worktime-tracking.herokuapp.com/account/logs/2017-02").then(function (response) {
+    $http.get("https://worktime-tracking.herokuapp.com/account/logs").then(function (response) {
         $scope.days = response.data;
+        $scope.days.dailyWork.reverse();
     });
 
     $scope.data = {
